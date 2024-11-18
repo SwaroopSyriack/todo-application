@@ -6,6 +6,8 @@ import Home from "./pages/Home"
 import NotFound from "./pages/Notfound"
 import ProjectDetail from "./pages/ProjectDetail"
 import ProtectedRoute from "./components/ProtectedRoute"
+import ProjectExporter from "./pages/ProjectExport"
+
 
 function Logout() {
   localStorage.clear()
@@ -35,6 +37,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ProjectDetail/>
+          </ProtectedRoute>
+          }
+        />
+        <Route
+        path="/projects/:id/export"
+        element={
+          <ProtectedRoute>
+            <ProjectExporter/>
           </ProtectedRoute>
           }
         />

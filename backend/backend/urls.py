@@ -19,12 +19,14 @@ from django.urls import path,include
 from api.views import RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from rest_framework.routers import DefaultRouter
-from api.views import ProjectViewSet,TodoViewSet
+from api.views import ProjectViewSet,TodoViewSet,gist_export
+
 
 
 router = DefaultRouter()
 router.register(r'projects', ProjectViewSet, basename='project')
 router.register(r'todo', TodoViewSet, basename='todo')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +35,5 @@ urlpatterns = [
     path("api/token/refresh/",TokenRefreshView.as_view(),name="refresh"),
     path("api-auth/",include("rest_framework.urls")),
     path('api/', include(router.urls)),
+    path("export-gist/<int:project_id>/", gist_export, name="export_gist"),
 ]

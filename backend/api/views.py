@@ -6,13 +6,16 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from api.serializers import RegisterSerializer, ProjectSerializer, TodoSerializer
 from api.models import Project, Todo
+from django.http import JsonResponse
+from api.utils import export_summary_to_gist
+
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
 class ProjectViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ProjectSerializer
 
@@ -39,6 +42,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         """
         project = self.get_object()
         return Response(project.get_todos_stats())
+    
 
 class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
@@ -82,3 +86,13 @@ class TodoViewSet(viewsets.ModelViewSet):
         todo.save()
         serializer = self.get_serializer(todo)
         return Response(serializer.data)
+
+def gist_export(request, project_id):
+    if request.method == "GET":
+        gist_url = export_summary_to_gist(project_id)
+        if "Gist created successfully" in gist_url:
+            return JsonResponse({"success": True, "url": gist_url.split(": ")[1]})
+        else:
+            return JsonResponse({"success": False, "error": gist_url})
+    return JsonResponse({"success": False, "error": "Invalid request method."})
+    

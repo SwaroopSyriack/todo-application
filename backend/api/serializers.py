@@ -34,3 +34,6 @@ class ProjectSerializer(serializers.ModelSerializer):
     
     def get_todos_stats(self, obj):
         return obj.get_todos_stats()
+    
+    
+
